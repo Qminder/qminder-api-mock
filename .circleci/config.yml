@@ -1,0 +1,33 @@
+version: 2
+jobs:
+  build:
+    macos:
+      xcode: "10.0.0"
+
+    steps:
+      - checkout
+
+      - run:
+          name: Install Vapor
+          command: |
+            brew install vapor/tap/vapor
+
+      - run:
+          name: Build with Vapor
+          command: vapor build
+
+workflows:
+  version: 2
+  nightly:
+     triggers:
+       - schedule:
+           cron: "0 0 * * *"
+           filters:
+             branches:
+               only:
+                 - master
+     jobs:
+       - build
+  build-and-test:
+    jobs:
+      - build
